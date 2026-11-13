@@ -5,6 +5,7 @@ import connectPgSimple from 'connect-pg-simple';
 import 'dotenv/config';
 import { pool } from './db.js';
 import authRoutes from './routes/auth.js';
+import datasetRoutes from './routes/datasets.js';
 
 const app = express();
 const PgSession = connectPgSimple(session);
@@ -37,6 +38,7 @@ app.get('/api/health', async (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/datasets', datasetRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);
