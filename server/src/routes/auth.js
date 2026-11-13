@@ -4,6 +4,13 @@ import { pool } from '../db.js';
 
 const router = Router();
 
+// Replace the session with a fresh one (new session ID) and wait for it to finish.
+function regenerateSession(req) {
+  return new Promise((resolve, reject) => {
+    req.session.regenerate((err) => (err ? reject(err) : resolve()));
+  });
+}
+
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
@@ -12,12 +19,13 @@ router.post('/register', async (req, res) => {
       .status(400)
       .json({ error: 'Valid email and a password of 8+ characters required' });
   }
-    try {
+  try {
     const passwordHash = await bcrypt.hash(password, 10);
     const { rows } = await pool.query(
       'insert into users (email, password_hash) values ($1, $2) returning id, email',
       [email.toLowerCase(), passwordHash]
     );
+    await regenerateSession(req);
     req.session.userId = rows[0].id;
     res.status(201).json(rows[0]);
   } catch (err) {
@@ -42,6 +50,7 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid email or password' });
   }
 
+  await regenerateSession(req);
   req.session.userId = user.id;
   res.json({ id: user.id, email: user.email });
 });
