@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { AnnotatePage } from './pages/AnnotatePage';
 
 export default function App() {
   return (
@@ -13,6 +14,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/datasets/:id/annotate"
+        element={
+          <ProtectedRoute>
+            <AnnotatePage />
           </ProtectedRoute>
         }
       />

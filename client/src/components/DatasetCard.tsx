@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { ChangeEvent } from 'react';
 import { api, ApiError } from '../api';
 import type { Dataset } from '../types';
@@ -93,6 +94,11 @@ export function DatasetCard({ dataset, onDeleted, onUploaded }: Props) {
       )}
 
       <div className="card-actions">
+        {dataset.sample_count > 0 && (
+          <Link className="button-link" to={`/datasets/${dataset.id}/annotate`}>
+            {dataset.annotated_count >= dataset.sample_count ? 'Review' : 'Annotate'}
+          </Link>
+        )}
         <button
           type="button"
           className="secondary"
