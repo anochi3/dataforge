@@ -13,12 +13,19 @@ type Options = { method?: string; body?: unknown };
 
 export async function api<T>(path: string, options: Options = {}): Promise<T> {
   const hasBody = options.body !== undefined;
+  const isForm = options.body instanceof FormData;
 
   const res = await fetch(`${API_URL}${path}`, {
     method: options.method ?? 'GET',
     credentials: 'include',
-    headers: hasBody ? { 'Content-Type': 'application/json' } : undefined,
-    body: hasBody ? JSON.stringify(options.body) : undefined,
+    // For FormData we must NOT set Content-Type: the browser generates
+    // "multipart/form-data; boundary=..." itself, and a hand-written header lacks the boundary.
+    headers: hasBody && !isForm ? { 'Content-Type': 'application/json' } : undefined,
+    body: !hasBody
+      ? undefined
+      : isForm
+        ? (options.body as FormData)
+        : JSON.stringify(options.body),
   });
 
   if (res.status === 204) return undefined as T;
