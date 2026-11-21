@@ -3,6 +3,8 @@
 A full-stack web app for labelling text datasets. Upload a CSV of text samples, define your own labels, then annotate the samples one by one, with keyboard shortcuts, live progress and a label distribution chart.
 
 > **Status:** the core workflow works locally. Automated tests and deployment are in progress.
+![Dashboard](docs/dashboard.png)
+![Annotation screen](docs/annotate.png)
 
 ## Features
 
