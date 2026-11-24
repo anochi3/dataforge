@@ -2,7 +2,7 @@
 
 A full-stack web app for labelling text datasets. Upload a CSV of text samples, define your own labels, then annotate the samples one by one, with keyboard shortcuts, live progress and a label distribution chart.
 
-> **Status:** the core workflow works locally. Automated tests and deployment are in progress.
+>> **Status:** the core workflow works locally and the API is covered by integration tests. Deployment is in progress.
 ![Dashboard](docs/dashboard.png)
 ![Annotation screen](docs/annotate.png)
 
@@ -101,6 +101,14 @@ text
 ```
 
 A ready-made example is in `server/sample-data/articles.csv`.
+## Tests
+
+```bash
+cd server
+npm test
+```
+
+The API integration tests (Vitest and Supertest) run against the real PostgreSQL database configured in `server/.env`. Each test creates its own users with emails ending in `@dataforge.test`, and all of that data is deleted afterwards. They cover registration and login, password hashing, session regeneration, dataset ownership, CSV upload and annotations. To keep tests away from your development data, point `DATABASE_URL` at a separate database.
 
 ## API overview
 
@@ -138,7 +146,7 @@ All routes except register and login require a logged-in session.
 
 ## Known limitations and roadmap
 
-- No automated tests yet (API tests with Supertest are next)
+- No frontend tests yet (the API has integration tests)
 - Not deployed yet
 - No rate limiting on login, no email verification and no password reset
 - A labelled sample cannot be changed from the interface yet (the API already supports it)
